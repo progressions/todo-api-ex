@@ -24,4 +24,4 @@ RUN chmod +x /app/entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]
 
-CMD ["/app/_build/dev/rel/todo/bin/todo", "foreground"]
+CMD ["mix", "phx.server"]
