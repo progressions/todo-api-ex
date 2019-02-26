@@ -23,6 +23,20 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :plug_logger_json,
+  filtered_keys: ["password", "authorization"],
+  suppressed_keys: ["api_version", "log_type"]
+
+config :logger,
+  format: "$message\n",
+  backends: [{LoggerFileBackend, :log_file}, :console]
+
+config :logger, :log_file,
+  format: "$message\n",
+  level: :info,
+  metadata: [:request_id],
+  path: "log/#{Mix.env()}.log"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

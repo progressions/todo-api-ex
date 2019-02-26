@@ -1,8 +1,10 @@
 defmodule TodoWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :todo
 
-  socket "/socket", TodoWeb.UserSocket,
-    websocket: true # or list of options
+  socket("/socket", TodoWeb.UserSocket,
+    # or list of options
+    websocket: true
+  )
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -25,7 +27,11 @@ defmodule TodoWeb.Endpoint do
   end
 
   plug(Plug.RequestId)
-  plug(Plug.Logger)
+
+  plug(
+    Plug.LoggerJSON,
+    log: Logger.level()
+  )
 
   plug(
     Plug.Parsers,
@@ -57,7 +63,8 @@ defmodule TodoWeb.Endpoint do
   """
   def init(_key, config) do
     if config[:load_from_system_env] do
-      port = "4000" # || System.get_env("PORT") || raise "expected the PORT environment variable to be set!"
+      # || System.get_env("PORT") || raise "expected the PORT environment variable to be set!"
+      port = "4000"
       {:ok, Keyword.put(config, :http, [:inet6, port: port])}
     else
       {:ok, config}

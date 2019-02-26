@@ -1,6 +1,10 @@
 defmodule TodoWeb.Router do
   use TodoWeb, :router
 
+  require Logger
+
+  use Plug.ErrorHandler
+
   pipeline :api do
     plug(:accepts, ["json"])
     plug(:fetch_session)
@@ -35,4 +39,15 @@ defmodule TodoWeb.Router do
     put("/lists/:list_id/items/:id/finish", ItemController, :finish)
     delete("/lists/:list_id/items/:id", ItemController, :delete)
   end
+
+  defp handle_errors(%Plug.Conn{status: 500} = conn, %{
+         kind: kind,
+         reason: reason,
+         stack: stacktrace
+       }) do
+    Plug.LoggerJSON.log_error(kind, reason, stacktrace)
+    send_resp(conn, 500, Poison.encode!(%{errors: %{detail: "Internal server error"}}))
+  end
+
+  defp handle_errors(_, _), do: nil
 end
