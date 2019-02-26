@@ -34,6 +34,7 @@ defmodule Todo.Mixfile do
   defp deps do
     [
       {:phoenix, "~> 1.4"},
+      {:jason, "~> 1.0"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.6"},
       {:postgrex, ">= 0.0.0"},
@@ -42,7 +43,6 @@ defmodule Todo.Mixfile do
       {:gettext, "~> 0.11"},
       {:plug_cowboy, "~> 2.0"},
       {:timex, "~> 3.1"},
-      {:poison, "~> 3.1"},
       {:distillery, "~> 2.0"},
     ]
   end
