@@ -3,8 +3,6 @@ defmodule TodoWeb.HealthController do
 
   alias Todo.{Repo}
 
-  import TodoWeb.ErrorHelpers
-
   def check(conn, _params) do
     results = results() |> Jason.encode()
 
@@ -28,7 +26,7 @@ defmodule TodoWeb.HealthController do
       Ecto.Adapters.SQL.query(Todo.Repo, "select 1", [])
       :ok
     rescue
-      DBConnection.ConnectionError -> :error
+      e in DBConnection.ConnectionError -> :error
     end
   end
 
