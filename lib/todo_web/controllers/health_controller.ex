@@ -4,11 +4,9 @@ defmodule TodoWeb.HealthController do
   alias Todo.{Repo}
 
   def check(conn, _params) do
-    results = results() |> Jason.encode()
-
     case database_check do
-      :ok -> respond(conn, "healthcheck passed", 204, results)
-      :error -> respond(conn, "healthcheck failed", 500, results)
+      :ok -> respond(conn, "healthcheck passed", 204, results())
+      :error -> respond(conn, "healthcheck failed", 500, results())
     end
   end
 
@@ -18,7 +16,8 @@ defmodule TodoWeb.HealthController do
   end
 
   defp respond(conn, message, code, results) do
-    text(conn, message)
+    {:ok, response} = Jason.encode(%{message: message, results: results})
+    text(conn, response)
   end
 
   defp database_check do
