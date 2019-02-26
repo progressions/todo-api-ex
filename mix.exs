@@ -45,6 +45,8 @@ defmodule Todo.Mixfile do
       {:plug_cowboy, "~> 2.0"},
       {:timex, "~> 3.1"},
       {:distillery, "~> 2.0"},
+      {:plug_logger_json, "~> 0.6.0"},
+      {:logger_file_backend, "~> 0.0.10"}
     ]
   end
 
