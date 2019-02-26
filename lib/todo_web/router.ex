@@ -40,6 +40,10 @@ defmodule TodoWeb.Router do
     delete("/lists/:list_id/items/:id", ItemController, :delete)
   end
 
+  scope "/", TodoWeb do
+    get "/__healthcheck__", HealthController, :check
+  end
+
   defp handle_errors(%Plug.Conn{status: 500} = conn, %{
          kind: kind,
          reason: reason,
