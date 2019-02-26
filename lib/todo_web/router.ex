@@ -35,4 +35,8 @@ defmodule TodoWeb.Router do
     put("/lists/:list_id/items/:id/finish", ItemController, :finish)
     delete("/lists/:list_id/items/:id", ItemController, :delete)
   end
+
+  scope "/", TodoWeb do
+    get "/__healthcheck__", HealthController, :check
+  end
 end
