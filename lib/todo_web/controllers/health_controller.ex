@@ -1,10 +1,8 @@
 defmodule TodoWeb.HealthController do
   use TodoWeb, :controller
 
-  alias Todo.{Repo}
-
   def check(conn, _params) do
-    case database_check do
+    case database_check() do
       :ok -> respond(conn, "healthcheck passed", 204, results())
       :error -> respond(conn, "healthcheck failed", 500, results())
     end
@@ -15,7 +13,7 @@ defmodule TodoWeb.HealthController do
     "OK"
   end
 
-  defp respond(conn, message, code, results) do
+  defp respond(conn, message, _code, results) do
     {:ok, response} = Jason.encode(%{message: message, results: results})
     text(conn, response)
   end
@@ -25,7 +23,7 @@ defmodule TodoWeb.HealthController do
       Ecto.Adapters.SQL.query(Todo.Repo, "select 1", [])
       :ok
     rescue
-      e in DBConnection.ConnectionError -> :error
+      _ in DBConnection.ConnectionError -> :error
     end
   end
 
