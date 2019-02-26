@@ -1,5 +1,7 @@
 defmodule Todo.Repo do
-  use Ecto.Repo, otp_app: :todo
+  use Ecto.Repo,
+    otp_app: :todo,
+    adapter: Ecto.Adapters.Postgres
 
   @doc """
   Dynamically loads the repository url from the
