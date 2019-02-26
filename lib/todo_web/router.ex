@@ -37,6 +37,6 @@ defmodule TodoWeb.Router do
   end
 
   scope "/", TodoWeb do
-    get "__healthcheck__", HealthController, :check
+    get "/__healthcheck__", HealthController, :check
   end
 end
