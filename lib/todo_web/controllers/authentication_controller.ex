@@ -18,9 +18,8 @@ defmodule TodoWeb.AuthenticationController do
   defp expires_at do
     Timex.now()
     |> Timex.add(Duration.from_minutes(20))
-    |> Ecto.DateTime.cast()
     |> case do
-      {:ok, date} -> Ecto.DateTime.to_string(date)
+      {:ok, date} -> DateTime.to_string(date)
       _ -> nil
     end
   end
