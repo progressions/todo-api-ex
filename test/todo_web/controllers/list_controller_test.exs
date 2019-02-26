@@ -20,12 +20,13 @@ defmodule TodoWeb.ListControllerTest do
     |> put_req_header("authorization", "Token token=\"#{Ecto.UUID.generate()}\"")
   end
 
-  def create_user(username \\ "username", password \\ "password") do
+  def create_user(username \\ "something", password \\ "password") do
     with {:ok, user} <-
            Todo.Repo.insert(%Todo.User{
              encrypted_username_password: Todo.User.encode(username, password)
-           }),
-         do: user
+           }) do
+      user
+    end
   end
 
   def create_list(user, name: name) do
@@ -46,7 +47,7 @@ defmodule TodoWeb.ListControllerTest do
     list_1 = create_list(user, name: "Shopping")
     list_2 = create_list(user, name: "Groceries")
 
-    different_user = create_user()
+    different_user = create_user("nobody")
     _list_3 = create_list(different_user, name: "Movies")
     _list_4 = create_list(different_user, name: "TV Shows")
 
@@ -58,14 +59,14 @@ defmodule TodoWeb.ListControllerTest do
     assert json_response(conn, 200) == %{
              "lists" => [
                %{
-                 "id" => list_1.id,
-                 "name" => list_1.name,
-                 "src" => "http://localhost:4000/lists/#{list_1.id}"
-               },
-               %{
                  "id" => list_2.id,
                  "name" => list_2.name,
                  "src" => "http://localhost:4000/lists/#{list_2.id}"
+               },
+               %{
+                 "id" => list_1.id,
+                 "name" => list_1.name,
+                 "src" => "http://localhost:4000/lists/#{list_1.id}"
                }
              ]
            }
@@ -99,6 +100,23 @@ defmodule TodoWeb.ListControllerTest do
       |> post("/api/lists", payload)
 
     assert %{"name" => "Urgent Things", "id" => _, "src" => _} = json_response(conn, 201)
+  end
+
+  test "POST /api/lists with duplicate name ", %{conn: conn} do
+    (user = create_user()) |> create_list(name: "Shopping")
+
+    payload = %{
+      list: %{
+        name: "Shopping"
+      }
+    }
+
+    conn =
+      conn
+      |> with_valid_auth_token_header(user)
+      |> post("/api/lists", payload)
+
+    assert json_response(conn, 422) == %{"name" => ["has already been taken"]}
   end
 
   test "GET /api/list/:id without authentication throws 401", %{conn: conn} do
@@ -144,7 +162,7 @@ defmodule TodoWeb.ListControllerTest do
 
   test "GET /api/list/:id returns 404 for list that doesn't belong to user", %{conn: conn} do
     list = (_user = create_user()) |> create_list(name: "Shopping")
-    different_user = create_user()
+    different_user = create_user("nobody")
 
     conn =
       conn
@@ -194,7 +212,8 @@ defmodule TodoWeb.ListControllerTest do
   end
 
   test "PATCH /api/lists/:id with authentication updates list", %{conn: conn} do
-    list = (user = create_user()) |> create_list(name: "Shopping")
+    user = create_user()
+    list = create_list(user, name: "Shopping")
 
     payload = %{
       list: %{
@@ -212,7 +231,7 @@ defmodule TodoWeb.ListControllerTest do
 
   test "PATCH /api/lists/:id returns 404 for someone else's list", %{conn: conn} do
     list = (_user = create_user()) |> create_list(name: "Shopping")
-    different_user = create_user()
+    different_user = create_user("nobody")
 
     payload = %{
       list: %{
@@ -285,8 +304,8 @@ defmodule TodoWeb.ListControllerTest do
   end
 
   test "DELETE /api/lists/:id returns 404 for someone else's list", %{conn: conn} do
-    list = (_user = create_user()) |> create_list(name: "Shopping")
-    different_user = create_user()
+    list = (_user = create_user("nobody")) |> create_list(name: "Shopping")
+    different_user = create_user("somebody")
 
     conn =
       conn

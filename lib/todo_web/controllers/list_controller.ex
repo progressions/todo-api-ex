@@ -12,8 +12,8 @@ defmodule TodoWeb.ListController do
 
   def show(conn, %{"id" => list_id}) do
     with user <- Todo.UserSession.current_user(conn),
-         {:ok, list_id} <- Ecto.UUID.cast(list_id),
-         list = %List{} <- find_list(user, list_id) |> Repo.preload(:items) do
+         list = %List{} <- find_list(user, list_id),
+         list <- Repo.preload(list, :items) do
       render(conn, "show.json", list: list)
     else
       :error -> malformed_request(conn)
@@ -23,8 +23,7 @@ defmodule TodoWeb.ListController do
 
   def create(conn, %{"list" => %{"name" => name}}) do
     with user <- Todo.UserSession.current_user(conn),
-         changeset <- Ecto.build_assoc(user, :lists, name: name),
-         {:ok, list} <- Repo.insert(changeset) do
+         {:ok, list} <- Todo.List.create(user, name: name) do
       conn
       |> put_status(201)
       |> render("create.json", list: list)
@@ -35,10 +34,8 @@ defmodule TodoWeb.ListController do
 
   def update(conn, %{"id" => list_id, "list" => params}) do
     with user <- Todo.UserSession.current_user(conn),
-         {:ok, list_id} <- Ecto.UUID.cast(list_id),
-         list = %List{} <- find_list(user, list_id) |> Repo.preload(:user),
-         changeset <- List.changeset(list, params),
-         {:ok, updated} <- Repo.update(changeset) do
+         list = %List{} <- find_list(user, list_id),
+         {:ok, updated} <- Todo.List.update(list, params) do
       conn
       |> put_status(201)
       |> render("update.json", list: updated)
@@ -51,7 +48,6 @@ defmodule TodoWeb.ListController do
 
   def delete(conn, %{"id" => list_id}) do
     with user <- Todo.UserSession.current_user(conn),
-         {:ok, list_id} <- Ecto.UUID.cast(list_id),
          list = %List{} <- find_list(user, list_id),
          {:ok, _list} <- Repo.delete(list) do
       conn
@@ -64,7 +60,9 @@ defmodule TodoWeb.ListController do
   end
 
   defp find_list(user, id) do
-    Ecto.assoc(user, :lists)
-    |> Repo.get(id)
+    with {:ok, id} <- Ecto.UUID.cast(id) do
+      Ecto.assoc(user, :lists)
+      |> Repo.get(id)
+    end
   end
 end

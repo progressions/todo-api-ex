@@ -1,7 +1,10 @@
 defmodule TodoWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :todo
 
-  socket("/socket", TodoWeb.UserSocket)
+  socket("/socket", TodoWeb.UserSocket,
+    # or list of options
+    websocket: true
+  )
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -12,7 +15,7 @@ defmodule TodoWeb.Endpoint do
     at: "/",
     from: :todo,
     gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt)
+    only: ~w(css fonts images js favicon.ico robots.txt input.html)
   )
 
   # Code reloading can be explicitly enabled under the
@@ -24,13 +27,17 @@ defmodule TodoWeb.Endpoint do
   end
 
   plug(Plug.RequestId)
-  plug(Plug.Logger)
+
+  plug(
+    Plug.LoggerJSON,
+    log: Logger.level()
+  )
 
   plug(
     Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
-    json_decoder: Poison
+    json_decoder: Jason
   )
 
   plug(Plug.MethodOverride)
@@ -56,7 +63,7 @@ defmodule TodoWeb.Endpoint do
   """
   def init(_key, config) do
     if config[:load_from_system_env] do
-      port = System.get_env("PORT") || raise "expected the PORT environment variable to be set"
+      port = System.get_env("PORT") || raise "expected the PORT environment variable to be set!"
       {:ok, Keyword.put(config, :http, [:inet6, port: port])}
     else
       {:ok, config}

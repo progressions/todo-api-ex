@@ -1,6 +1,10 @@
 defmodule TodoWeb.Router do
   use TodoWeb, :router
 
+  require Logger
+
+  use Plug.ErrorHandler
+
   pipeline :api do
     plug(:accepts, ["json"])
     plug(:fetch_session)
@@ -40,6 +44,10 @@ defmodule TodoWeb.Router do
     forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :todo, swagger_file: "swagger.json", disable_validator: true
   end
 
+  scope "/", TodoWeb do
+    get "/__healthcheck__", HealthController, :check
+  end
+
   def swagger_info do
     %{
       info: %{
@@ -49,4 +57,15 @@ defmodule TodoWeb.Router do
       }
     }
   end
+
+  defp handle_errors(%Plug.Conn{status: 500} = conn, %{
+         kind: kind,
+         reason: reason,
+         stack: stacktrace
+       }) do
+    Plug.LoggerJSON.log_error(kind, reason, stacktrace)
+    send_resp(conn, 500, Jason.encode!(%{errors: %{detail: "Internal server error"}}))
+  end
+
+  defp handle_errors(_, _), do: nil
 end

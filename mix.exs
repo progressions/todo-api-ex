@@ -5,7 +5,7 @@ defmodule Todo.Mixfile do
     [
       app: :todo,
       version: "0.3.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.8",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -33,17 +33,22 @@ defmodule Todo.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.0"},
+      {:phoenix, "~> 1.4"},
+      {:jason, "~> 1.0"},
       {:phoenix_pubsub, "~> 1.0"},
-      {:phoenix_ecto, "~> 3.2"},
+      {:ecto_sql, "~> 3.0"},
+      {:phoenix_ecto, "~> 4.0"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.10"},
-      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"},
-      {:timex, "~> 3.1"},
       {:phoenix_swagger, "~> 0.7.0"},
-      {:ex_json_schema, "~> 0.5"}
+      {:ex_json_schema, "~> 0.5"},
+      {:plug_cowboy, "~> 2.0"},
+      {:timex, "~> 3.1"},
+      {:distillery, "~> 2.0"},
+      {:plug_logger_json, "~> 0.6.0"},
+      {:logger_file_backend, "~> 0.0.10"}
     ]
   end
 
