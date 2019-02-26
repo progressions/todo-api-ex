@@ -46,7 +46,7 @@ defmodule TodoWeb.Router do
          stack: stacktrace
        }) do
     Plug.LoggerJSON.log_error(kind, reason, stacktrace)
-    send_resp(conn, 500, Poison.encode!(%{errors: %{detail: "Internal server error"}}))
+    send_resp(conn, 500, Jason.encode!(%{errors: %{detail: "Internal server error"}}))
   end
 
   defp handle_errors(_, _), do: nil
