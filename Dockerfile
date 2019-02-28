@@ -6,6 +6,7 @@ RUN apk update \
 
 ARG MIX_ENV=dev
 ENV MIX_ENV ${MIX_ENV}
+ENV SECRET_KEY_BASE "1234"
 
 # Set exposed ports
 EXPOSE 4000
@@ -20,7 +21,9 @@ RUN mkdir /app/log
 ADD . ./
 
 # Get deps & compile project
-RUN mix do deps.get, release
+RUN mix deps.get \
+  && MIX_ENV=test mix compile \
+  && mix release
 
 RUN chmod +x /app/entrypoint.sh
 
