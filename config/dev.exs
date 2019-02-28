@@ -51,6 +51,6 @@ config :phoenix, :stacktrace_depth, 20
 config :todo, Todo.Repo,
   username: System.get_env("PGUSER"),
   password: System.get_env("PGPASSWORD"),
-  database: "todo_dev",
-  hostname: "localhost",
+  hostname: System.get_env("PGHOST"),
+  database: System.get_env("PGDATABASE"),
   pool_size: 10

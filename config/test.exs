@@ -11,8 +11,8 @@ config :logger, level: :warn
 
 # Configure your database
 config :todo, Todo.Repo,
-  username: "ipriestley",
-  password: "",
-  database: "todo_test",
-  hostname: "localhost",
+  username: System.get_env("PGUSER"),
+  password: System.get_env("PGPASSWORD"),
+  database: System.get_env("PGDATABASE"),
+  hostname: System.get_env("PGHOST"),
   pool: Ecto.Adapters.SQL.Sandbox

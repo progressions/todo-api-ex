@@ -8,7 +8,6 @@ do
   sleep 2
 done
 
-# Create, migrate, and seed database if it doesn't exist.
-mix do ecto.setup
+mix ecto.setup
 
 exec $@
