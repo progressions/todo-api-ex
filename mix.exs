@@ -7,7 +7,7 @@ defmodule Todo.Mixfile do
       version: "0.3.0",
       elixir: "~> 1.8",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      compilers: [:phoenix, :gettext, :phoenix_swagger] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -46,7 +46,9 @@ defmodule Todo.Mixfile do
       {:timex, "~> 3.1"},
       {:distillery, "~> 2.0"},
       {:plug_logger_json, "~> 0.6.0"},
-      {:logger_file_backend, "~> 0.0.10"}
+      {:logger_file_backend, "~> 0.0.10"},
+      {:phoenix_swagger, "~> 0.8"},
+      {:ex_json_schema, "~> 0.5"}
     ]
   end
 
