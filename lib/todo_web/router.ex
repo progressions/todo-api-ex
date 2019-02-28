@@ -41,7 +41,7 @@ defmodule TodoWeb.Router do
   end
 
   scope "/", TodoWeb do
-    get "/__healthcheck__", HealthController, :check
+    get("/__healthcheck__", HealthController, :check)
   end
 
   defp handle_errors(%Plug.Conn{status: 500} = conn, %{
