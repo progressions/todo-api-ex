@@ -6,6 +6,9 @@ jobs:  # basic units of work in a run
       - image: circleci/elixir:1.8.0  # ...with this image as the primary container; this is where all `steps` will run
         environment:  # environment variables for primary container
           MIX_ENV: test
+          PGUSER: postgres
+          PGPASSWORD:
+          PGDATABASE: app_test
           PGPORT: 5432
       - image: circleci/postgres:10.1-alpine  # database image
         environment:  # environment variables for database
