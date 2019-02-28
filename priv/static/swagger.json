@@ -1,0 +1,27 @@
+{
+  "swagger": "2.0",
+  "paths": {
+    "/__healthcheck__": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "",
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        },
+        "parameters": [],
+        "operationId": "TodoWeb.HealthController.check",
+        "description": "Health check"
+      }
+    }
+  },
+  "info": {
+    "version": "1.0",
+    "title": "Todoable"
+  },
+  "host": "localhost:4000",
+  "definitions": {}
+}

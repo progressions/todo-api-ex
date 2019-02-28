@@ -1,6 +1,14 @@
 defmodule TodoWeb.HealthController do
   use TodoWeb, :controller
 
+  use PhoenixSwagger
+
+  swagger_path :check do
+    get "/__healthcheck__"
+    description "Health check"
+    response 204, "Success"
+  end
+
   def check(conn, _params) do
     case database_check() do
       :ok -> respond(conn, "healthcheck passed", 204, results())

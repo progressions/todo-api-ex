@@ -40,8 +40,10 @@ config :logger, :log_file,
 config :todo, :phoenix_swagger,
   swagger_files: %{
     "priv/static/swagger.json" => [
-      router: TodoWeb.Router,     # phoenix routes will be converted to swagger paths
-      endpoint: TodoWeb.Endpoint  # (optional) endpoint config used to set host, port and https schemes.
+      # phoenix routes will be converted to swagger paths
+      router: TodoWeb.Router,
+      # (optional) endpoint config used to set host, port and https schemes.
+      endpoint: TodoWeb.Endpoint
     ]
   }
 

@@ -44,6 +44,10 @@ defmodule TodoWeb.Router do
     get("/__healthcheck__", HealthController, :check)
   end
 
+  scope "/api/swagger" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :todo, swagger_file: "swagger.json", disable_validator: true
+  end
+
   defp handle_errors(%Plug.Conn{status: 500} = conn, %{
          kind: kind,
          reason: reason,
@@ -54,4 +58,13 @@ defmodule TodoWeb.Router do
   end
 
   defp handle_errors(_, _), do: nil
+
+  def swagger_info do
+    %{
+      info: %{
+        version: "1.0",
+        title: "Todoable"
+      }
+    }
+  end
 end
