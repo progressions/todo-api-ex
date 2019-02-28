@@ -8,10 +8,10 @@ defmodule TodoWeb.AuthenticationController do
   use PhoenixSwagger
 
   swagger_path :authenticate do
-    post "/api/authenticate"
-    description "Authenticate with basic auth and get a token back"
-    response 200, "Success"
-    security "basicAuth"
+    post("/api/authenticate")
+    description("Authenticate with basic auth and get a token back")
+    response(200, "Success")
+    security("basicAuth")
   end
 
   def authenticate(conn, _params) do
@@ -43,14 +43,16 @@ defmodule TodoWeb.AuthenticationController do
 
   def swagger_definitions do
     %{
-      Token: swagger_schema do
-        title "Authentication Token"
-        description "Authentication token, expires in 20 minutes"
-        properties do
-          token :string, "Authentication Token"
-          expires_at :datetime, "Expiration date"
+      Token:
+        swagger_schema do
+          title("Authentication Token")
+          description("Authentication token, expires in 20 minutes")
+
+          properties do
+            token(:string, "Authentication Token")
+            expires_at(:datetime, "Expiration date")
+          end
         end
-      end
     }
   end
 end

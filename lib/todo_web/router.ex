@@ -41,11 +41,15 @@ defmodule TodoWeb.Router do
   end
 
   scope "/api/swagger" do
-    forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :todo, swagger_file: "swagger.json", disable_validator: true
+    forward("/", PhoenixSwagger.Plug.SwaggerUI,
+      otp_app: :todo,
+      swagger_file: "swagger.json",
+      disable_validator: true
+    )
   end
 
   scope "/", TodoWeb do
-    get "/__healthcheck__", HealthController, :check
+    get("/__healthcheck__", HealthController, :check)
   end
 
   def swagger_info do

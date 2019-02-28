@@ -18,6 +18,16 @@ config :todo, TodoWeb.Endpoint,
   render_errors: [view: TodoWeb.ErrorView, accepts: ~w(json)],
   pubsub: [name: Todo.PubSub, adapter: Phoenix.PubSub.PG2]
 
+config :todo, :phoenix_swagger,
+  swagger_files: %{
+    "priv/static/swagger.json" => [
+      # phoenix routes will be converted to swagger paths
+      router: TodoWeb.Router,
+      # (optional) endpoint config used to set host, port and https schemes.
+      endpoint: TodoWeb.Endpoint
+    ]
+  }
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
