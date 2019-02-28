@@ -26,5 +26,4 @@ defmodule TodoWeb.HealthController do
       _ in DBConnection.ConnectionError -> :error
     end
   end
-
 end

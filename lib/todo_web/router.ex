@@ -40,8 +40,26 @@ defmodule TodoWeb.Router do
     delete("/lists/:list_id/items/:id", ItemController, :delete)
   end
 
+  scope "/api/swagger" do
+    forward("/", PhoenixSwagger.Plug.SwaggerUI,
+      otp_app: :todo,
+      swagger_file: "swagger.json",
+      disable_validator: true
+    )
+  end
+
   scope "/", TodoWeb do
-    get "/__healthcheck__", HealthController, :check
+    get("/__healthcheck__", HealthController, :check)
+  end
+
+  def swagger_info do
+    %{
+      info: %{
+        version: "1.0",
+        title: "Todoable",
+        host: "https://intense-hamlet-87296.herokuapp.com/"
+      }
+    }
   end
 
   defp handle_errors(%Plug.Conn{status: 500} = conn, %{
