@@ -33,6 +33,23 @@ services:
     depends_on:
       # The db container needs to be started before we start this container
       - db
+
+  test:
+    <<: *default-web
+    environment:
+      # Variables to connect to our Postgres server
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: todoable
+      PGPORT: 5432
+      # Hostname of our Postgres container
+      PGHOST: db
+      MIX_ENV: test
+    command: ["mix", "test"]
+    depends_on:
+      # The db container needs to be started before we start this container
+      - db
+
   db:
     # We use the predefined Postgres image
     image: postgres:9.6
