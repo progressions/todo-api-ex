@@ -1,10 +1,19 @@
 # Version of docker-compose
-version: '3'
+version: '3.4'
+
+x-web:
+  &default-web
+  image: web:dev
+  volumes:
+    - ./lib:/app/lib
+    - ./test:/app/test
+    - ./config:/app/config
 
 # Containers we are going to run
 services:
   # Our Phoenix container
   web:
+    <<: *default-web
     # The build parameters for this container.
     build:
       # Here we define that it should build from the current directory
@@ -17,6 +26,7 @@ services:
       PGPORT: 5432
       # Hostname of our Postgres container
       PGHOST: db
+      MIX_ENV: dev
     ports:
       # Mapping the port to make the Phoenix app accessible outside of the container
       - "4000:4000"
