@@ -42,13 +42,13 @@ defmodule Todo.Mixfile do
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
-      {:phoenix_swagger, "~> 0.7.0"},
-      {:ex_json_schema, "~> 0.5"},
+      {:phoenix_swagger, "~> 0.8.1"},
       {:plug_cowboy, "~> 2.0"},
       {:timex, "~> 3.1"},
       {:distillery, "~> 2.0"},
       {:plug_logger_json, "~> 0.6.0"},
-      {:logger_file_backend, "~> 0.0.10"}
+      {:logger_file_backend, "~> 0.0.10"},
+      {:ex_json_schema, "~> 0.5"}
     ]
   end
 

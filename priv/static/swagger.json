@@ -3,13 +3,11 @@
   "paths": {
     "/api/authenticate": {
       "post": {
-        "security": {
-          "type": "basic"
-        },
         "tags": [
           "Authentication"
         ],
         "summary": "",
+        "security": "basicAuth",
         "responses": {
           "200": {
             "description": "Success"
@@ -19,12 +17,27 @@
         "operationId": "TodoWeb.AuthenticationController.authenticate",
         "description": "Authenticate with basic auth and get a token back"
       }
+    },
+    "/__healthcheck__": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "",
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        },
+        "parameters": [],
+        "operationId": "TodoWeb.HealthController.check",
+        "description": "Health check"
+      }
     }
   },
   "info": {
     "version": "1.0",
-    "title": "Todoable",
-    "host": "https://intense-hamlet-87296.herokuapp.com/"
+    "title": "Todoable"
   },
   "host": "localhost:4000",
   "definitions": {

@@ -52,16 +52,6 @@ defmodule TodoWeb.Router do
     get("/__healthcheck__", HealthController, :check)
   end
 
-  def swagger_info do
-    %{
-      info: %{
-        version: "1.0",
-        title: "Todoable",
-        host: "https://intense-hamlet-87296.herokuapp.com/"
-      }
-    }
-  end
-
   defp handle_errors(%Plug.Conn{status: 500} = conn, %{
          kind: kind,
          reason: reason,
@@ -72,4 +62,13 @@ defmodule TodoWeb.Router do
   end
 
   defp handle_errors(_, _), do: nil
+
+  def swagger_info do
+    %{
+      info: %{
+        version: "1.0",
+        title: "Todoable"
+      }
+    }
+  end
 end
