@@ -6,12 +6,12 @@ defmodule TodoWeb.HealthController do
   swagger_path :check do
     get("/__healthcheck__")
     description("Basic health check")
-    response(204, "Success")
+    response(200, "Success")
   end
 
   def check(conn, _params) do
     case database_check() do
-      :ok -> respond(conn, "healthcheck passed", 204, results())
+      :ok -> respond(conn, "healthcheck passed", 200, results())
       :error -> respond(conn, "healthcheck failed", 500, results())
     end
   end
@@ -24,9 +24,11 @@ defmodule TodoWeb.HealthController do
     }
   end
 
-  defp respond(conn, message, _code, results) do
-    {:ok, response} = Jason.encode(%{message: message, results: results})
-    text(conn, response)
+  defp respond(conn, message, code, results) do
+    conn
+    |> put_status(code)
+    |> put_resp_header("content-type", "application/json")
+    |> json(%{message: message, results: results})
   end
 
   defp database_check do
