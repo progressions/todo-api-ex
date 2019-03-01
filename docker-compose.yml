@@ -22,7 +22,7 @@ services:
       # Variables to connect to our Postgres server
       PGUSER: postgres
       PGPASSWORD: postgres
-      PGDATABASE: todoable_dev
+      PGDATABASE: todoable
       PGPORT: 5432
       # Hostname of our Postgres container
       PGHOST: db
@@ -40,7 +40,7 @@ services:
       # Variables to connect to our Postgres server
       PGUSER: postgres
       PGPASSWORD: postgres
-      PGDATABASE: todoable_test
+      PGDATABASE: todoable
       PGPORT: 5432
       # Hostname of our Postgres container
       PGHOST: db
