@@ -25,13 +25,13 @@
         ],
         "summary": "",
         "responses": {
-          "204": {
+          "200": {
             "description": "Success"
           }
         },
         "parameters": [],
         "operationId": "TodoWeb.HealthController.check",
-        "description": "Health check"
+        "description": "Basic health check"
       }
     }
   },
