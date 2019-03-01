@@ -39,7 +39,7 @@ config :plug_logger_json,
 
 config :logger,
   format: "$message\n",
-  backends: [{LoggerFileBackend, :log_file}, :console]
+  backends: [:console]
 
 config :logger, :log_file,
   format: "$message\n",

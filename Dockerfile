@@ -16,8 +16,6 @@ ENV PORT=4000
 RUN mkdir /app
 WORKDIR /app
 
-RUN mkdir /app/log
-
 ADD . ./
 
 # Get deps & compile project
