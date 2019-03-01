@@ -4,9 +4,9 @@ defmodule TodoWeb.HealthController do
   use PhoenixSwagger
 
   swagger_path :check do
-    get "/__healthcheck__"
-    description "Health check"
-    response 204, "Success"
+    get("/__healthcheck__")
+    description("Basic health check")
+    response(204, "Success")
   end
 
   def check(conn, _params) do
@@ -17,8 +17,11 @@ defmodule TodoWeb.HealthController do
   end
 
   defp results do
-    # results = {status_code, %{ "X-Todo-Version" => 1.0, "X-Environment" => Mix.env() }, []}
-    "OK"
+    %{
+      "X-Todo-Version": 1.0,
+      "X-Environment": Mix.env(),
+      database: Todo.Repo.config()[:database]
+    }
   end
 
   defp respond(conn, message, _code, results) do
