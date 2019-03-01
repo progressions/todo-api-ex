@@ -18,6 +18,11 @@ defmodule TodoWeb.Router do
     plug(TokenAuth)
   end
 
+  scope "/", TodoWeb do
+    pipe_through(:api)
+    get("/__healthcheck__", HealthController, :check)
+  end
+
   # Other scopes may use custom stacks.
 
   scope "/api", TodoWeb do
@@ -46,10 +51,6 @@ defmodule TodoWeb.Router do
       swagger_file: "swagger.json",
       disable_validator: true
     )
-  end
-
-  scope "/", TodoWeb do
-    get("/__healthcheck__", HealthController, :check)
   end
 
   defp handle_errors(%Plug.Conn{status: 500} = conn, %{
