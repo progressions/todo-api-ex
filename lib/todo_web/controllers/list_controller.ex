@@ -22,8 +22,13 @@ defmodule TodoWeb.ListController do
   end
 
   def create(conn, %{"list" => %{"name" => name}}) do
+
     with user <- Todo.UserSession.current_user(conn),
          {:ok, list} <- Todo.List.create(user, name: name) do
+
+      {:ok, statsd} = DogStatsd.new("localhost", 8125)
+      DogStatsd.increment(statsd, "list.create")
+
       conn
       |> put_status(201)
       |> render("create.json", list: list)
@@ -36,6 +41,10 @@ defmodule TodoWeb.ListController do
     with user <- Todo.UserSession.current_user(conn),
          list = %List{} <- find_list(user, list_id),
          {:ok, updated} <- Todo.List.update(list, params) do
+
+      {:ok, statsd} = DogStatsd.new("localhost", 8125)
+      DogStatsd.increment(statsd, "list.update")
+
       conn
       |> put_status(201)
       |> render("update.json", list: updated)
@@ -50,6 +59,10 @@ defmodule TodoWeb.ListController do
     with user <- Todo.UserSession.current_user(conn),
          list = %List{} <- find_list(user, list_id),
          {:ok, _list} <- Repo.delete(list) do
+
+      {:ok, statsd} = DogStatsd.new("localhost", 8125)
+      DogStatsd.increment(statsd, "list.delete")
+
       conn
       |> put_status(204)
       |> send_resp(:no_content, "")

@@ -7,6 +7,8 @@ defmodule TodoWeb.AuthenticationController do
   use Timex
   use PhoenixSwagger
 
+  require DogStatsd
+
   swagger_path :authenticate do
     post("/api/authenticate")
     description("Authenticate with basic auth and get a token back")
@@ -16,6 +18,10 @@ defmodule TodoWeb.AuthenticationController do
 
   def authenticate(conn, _params) do
     with user <- Todo.UserSession.current_user(conn) do
+
+      {:ok, statsd} = DogStatsd.new("localhost", 8125)
+      DogStatsd.increment(statsd, "user.authenticate")
+
       render(conn, "authenticate.json", %{
         token: generate_and_cache_token(user.id),
         expires_at: expires_at()
