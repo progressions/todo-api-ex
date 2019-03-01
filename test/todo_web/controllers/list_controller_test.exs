@@ -44,8 +44,8 @@ defmodule TodoWeb.ListControllerTest do
 
   test "GET /api/lists with authentication returns lists for current user", %{conn: conn} do
     user = create_user()
-    list_1 = create_list(user, name: "Shopping")
-    list_2 = create_list(user, name: "Groceries")
+    list_1 = create_list(user, name: "Groceries")
+    list_2 = create_list(user, name: "Shopping")
 
     different_user = create_user("nobody")
     _list_3 = create_list(different_user, name: "Movies")
@@ -56,20 +56,21 @@ defmodule TodoWeb.ListControllerTest do
       |> with_valid_auth_token_header(user)
       |> get("/api/lists")
 
-    assert json_response(conn, 200) == %{
-             "lists" => [
-               %{
-                 "id" => list_2.id,
-                 "name" => list_2.name,
-                 "src" => "http://localhost:4000/lists/#{list_2.id}"
-               },
+    body = json_response(conn, 200)
+
+    lists = body["lists"] |> Enum.sort_by(&(&1["name"]))
+    assert lists == [
                %{
                  "id" => list_1.id,
                  "name" => list_1.name,
                  "src" => "http://localhost:4000/lists/#{list_1.id}"
+               },
+               %{
+                 "id" => list_2.id,
+                 "name" => list_2.name,
+                 "src" => "http://localhost:4000/lists/#{list_2.id}"
                }
              ]
-           }
   end
 
   test "POST /api/lists without authentication throws 401", %{conn: conn} do
