@@ -10,7 +10,7 @@ defmodule TodoWeb.Plugs.TokenAuth do
   def call(conn, _opts) do
     case get_req_header(conn, "authorization") do
       ["Token token=" <> token] ->
-        if user_id = find_token(token) do
+        if user_id = find_user_id(token) do
           conn
           |> put_session(:user_id, user_id)
         else
@@ -28,7 +28,7 @@ defmodule TodoWeb.Plugs.TokenAuth do
     |> halt
   end
 
-  defp find_token(token) do
+  defp find_user_id(token) do
     token = String.replace(token, ~r/"/, "")
     Cache.start_link()
     user_id = Cache.get("token.#{token}")
