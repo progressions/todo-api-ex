@@ -1,4 +1,4 @@
-defmodule TokenAuth do
+defmodule TodoWeb.Plugs.TokenAuth do
   import Plug.Conn
 
   alias Todo.Cache
@@ -12,7 +12,7 @@ defmodule TokenAuth do
       ["Token token=" <> token] ->
         if user_id = find_token(token) do
           conn
-          |> Plug.Conn.put_session(:user_id, user_id)
+          |> put_session(:user_id, user_id)
         else
           unauthorized(conn)
         end

@@ -1,4 +1,4 @@
-defmodule BasicAuth do
+defmodule TodoWeb.Plugs.BasicAuth do
   import Plug.Conn
 
   def init(opts) do

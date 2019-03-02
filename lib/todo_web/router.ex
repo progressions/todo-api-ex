@@ -11,11 +11,11 @@ defmodule TodoWeb.Router do
   end
 
   pipeline :basic_auth do
-    plug(BasicAuth)
+    plug(TodoWeb.Plugs.BasicAuth)
   end
 
   pipeline :token_auth do
-    plug(TokenAuth)
+    plug(TodoWeb.Plugs.TokenAuth)
   end
 
   scope "/", TodoWeb do
