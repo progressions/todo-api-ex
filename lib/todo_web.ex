@@ -37,7 +37,8 @@ defmodule TodoWeb do
       import Plug.Conn
       import TodoWeb.Router.Helpers
       import TodoWeb.Gettext
-      require DogStatsd
+
+      @stats Application.get_env(:todo, :dogstatsd_client)
     end
   end
 

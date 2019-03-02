@@ -9,9 +9,7 @@ defmodule TodoWeb.ItemController do
     with list = %List{} <- Repo.get(List, list_id),
          changeset <- Ecto.build_assoc(list, :items, name: name),
          {:ok, item} <- Repo.insert(changeset) do
-
-      {:ok, statsd} = DogStatsd.new("localhost", 8125)
-      DogStatsd.increment(statsd, "item.create")
+      Todo.Stats.increment("item.create")
 
       conn
       |> put_status(201)
@@ -29,9 +27,7 @@ defmodule TodoWeb.ItemController do
          item = %Item{} <- find_item(list, id) |> Repo.preload(:list),
          changeset <- Item.changeset(item, %{finished_at: DateTime.utc_now()}),
          {:ok, updated} <- Repo.update(changeset) do
-
-      {:ok, statsd} = DogStatsd.new("localhost", 8125)
-      DogStatsd.increment(statsd, "item.finish")
+      Todo.Stats.increment("item.finish")
 
       conn
       |> put_status(201)
@@ -49,9 +45,7 @@ defmodule TodoWeb.ItemController do
          list = %List{} <- Repo.get(List, list_id),
          item = %Item{} <- find_item(list, id),
          {:ok, _item} <- Repo.delete(item) do
-
-      {:ok, statsd} = DogStatsd.new("localhost", 8125)
-      DogStatsd.increment(statsd, "item.delete")
+      Todo.Stats.increment("item.delete")
 
       conn
       |> put_status(204)

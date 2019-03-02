@@ -58,19 +58,20 @@ defmodule TodoWeb.ListControllerTest do
 
     body = json_response(conn, 200)
 
-    lists = body["lists"] |> Enum.sort_by(&(&1["name"]))
+    lists = body["lists"] |> Enum.sort_by(& &1["name"])
+
     assert lists == [
-               %{
-                 "id" => list_1.id,
-                 "name" => list_1.name,
-                 "src" => "http://localhost:4000/lists/#{list_1.id}"
-               },
-               %{
-                 "id" => list_2.id,
-                 "name" => list_2.name,
-                 "src" => "http://localhost:4000/lists/#{list_2.id}"
-               }
-             ]
+             %{
+               "id" => list_1.id,
+               "name" => list_1.name,
+               "src" => "http://localhost:4000/lists/#{list_1.id}"
+             },
+             %{
+               "id" => list_2.id,
+               "name" => list_2.name,
+               "src" => "http://localhost:4000/lists/#{list_2.id}"
+             }
+           ]
   end
 
   test "POST /api/lists without authentication throws 401", %{conn: conn} do
