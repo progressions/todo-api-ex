@@ -15,9 +15,10 @@ defmodule TodoWeb.AuthenticationController do
   end
 
   def authenticate(conn, _params) do
-    with user <- Todo.UserSession.current_user(conn) do
+    with user <- Todo.UserSession.current_user(conn),
+         {:ok, token} <- generate_and_cache_token(user.id) do
       render(conn, "authenticate.json", %{
-        token: generate_and_cache_token(user.id),
+        token: token,
         expires_at: expires_at()
       })
     end
@@ -33,11 +34,20 @@ defmodule TodoWeb.AuthenticationController do
   end
 
   defp generate_and_cache_token(user_id) do
-    with token <- Ecto.UUID.generate() do
-      Cache.start_link()
-      Cache.setex("token.#{token}", 1200, user_id)
+    {:ok, token_generator} = fetch_token_generator()
+    token = token_generator.()
 
-      token
+    Cache.start_link()
+    Cache.setex("token.#{token}", 1200, user_id)
+
+    {:ok, token}
+  end
+
+  defp fetch_token_generator do
+    with nil <- Application.get_env(:todo, :token_generator) do
+      {:error, "Configure a token_generator in config/config.exs"}
+    else
+      fun -> {:ok, fun}
     end
   end
 

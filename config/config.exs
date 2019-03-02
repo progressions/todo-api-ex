@@ -57,6 +57,9 @@ config :todo, :phoenix_swagger,
     ]
   }
 
+# Configures the type of token generated when a user authenticates.
+config :todo, :token_generator, &Ecto.UUID.generate/0
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
