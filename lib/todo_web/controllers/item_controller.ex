@@ -1,7 +1,7 @@
 defmodule TodoWeb.ItemController do
   use TodoWeb, :controller
 
-  alias Todo.{Repo, List, Item}
+  alias Todo.{Repo, List, Item, Stats}
 
   import TodoWeb.ErrorHelpers
 
@@ -9,7 +9,7 @@ defmodule TodoWeb.ItemController do
     with list = %List{} <- Repo.get(List, list_id),
          changeset <- Ecto.build_assoc(list, :items, name: name),
          {:ok, item} <- Repo.insert(changeset) do
-      Todo.Stats.increment("item.create")
+      Stats.increment("item.create")
 
       conn
       |> put_status(201)
@@ -27,7 +27,7 @@ defmodule TodoWeb.ItemController do
          item = %Item{} <- find_item(list, id) |> Repo.preload(:list),
          changeset <- Item.changeset(item, %{finished_at: DateTime.utc_now()}),
          {:ok, updated} <- Repo.update(changeset) do
-      Todo.Stats.increment("item.finish")
+      Stats.increment("item.finish")
 
       conn
       |> put_status(201)
@@ -45,7 +45,7 @@ defmodule TodoWeb.ItemController do
          list = %List{} <- Repo.get(List, list_id),
          item = %Item{} <- find_item(list, id),
          {:ok, _item} <- Repo.delete(item) do
-      Todo.Stats.increment("item.delete")
+      Stats.increment("item.delete")
 
       conn
       |> put_status(204)

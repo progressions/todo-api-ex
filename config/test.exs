@@ -17,5 +17,4 @@ config :todo, Todo.Repo,
   hostname: System.get_env("PGHOST"),
   pool: Ecto.Adapters.SQL.Sandbox
 
-config :todo, :dogstatsd,
-  api: Todo.DogStatsd.Test
+config :todo, :dogstatsd, api: Todo.DogStatsd.Test

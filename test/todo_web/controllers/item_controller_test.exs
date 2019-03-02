@@ -49,6 +49,7 @@ defmodule Todo.ItemControllerTest do
 
     %{"name" => "Milk", "id" => id, "src" => src} = json_response(conn, 201)
     assert src == "http://localhost:4000/lists/#{list_id}/items/#{id}"
+    assert_received {:increment, "test.item.create"}
   end
 
   test "POST /lists/:list_id/items for nonexistent list throws 404", %{conn: conn} do
@@ -96,6 +97,7 @@ defmodule Todo.ItemControllerTest do
       |> put("/api/lists/#{list_id}/items/#{id}/finish")
 
     assert json_response(conn, 201) == "Milk finished"
+    assert_received {:increment, "test.item.finish"}
   end
 
   test "PUT /lists/:list_id/items/:id/finish with nonexistent list throws 404", %{conn: conn} do
@@ -178,6 +180,7 @@ defmodule Todo.ItemControllerTest do
       |> delete("/api/lists/#{list_id}/items/#{id}")
 
     assert response(conn, 204) == ""
+    assert_received {:increment, "test.item.delete"}
   end
 
   test "DELETE /lists/:list_id/items/:id/finish with nonexistent list throws 404", %{conn: conn} do

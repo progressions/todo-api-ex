@@ -1,7 +1,7 @@
 defmodule TodoWeb.ListController do
   use TodoWeb, :controller
 
-  alias Todo.{Repo, List}
+  alias Todo.{Repo, List, Stats}
 
   import TodoWeb.ErrorHelpers
 
@@ -24,7 +24,7 @@ defmodule TodoWeb.ListController do
   def create(conn, %{"list" => %{"name" => name}}) do
     with user <- Todo.UserSession.current_user(conn),
          {:ok, list} <- Todo.List.create(user, name: name) do
-      Todo.Stats.increment("list.create")
+      Stats.increment("list.create")
 
       conn
       |> put_status(201)
@@ -38,7 +38,7 @@ defmodule TodoWeb.ListController do
     with user <- Todo.UserSession.current_user(conn),
          list = %List{} <- find_list(user, list_id),
          {:ok, updated} <- Todo.List.update(list, params) do
-      Todo.Stats.increment("list.update")
+      Stats.increment("list.update")
 
       conn
       |> put_status(201)
@@ -54,7 +54,7 @@ defmodule TodoWeb.ListController do
     with user <- Todo.UserSession.current_user(conn),
          list = %List{} <- find_list(user, list_id),
          {:ok, _list} <- Repo.delete(list) do
-      Todo.Stats.increment("list.delete")
+      Stats.increment("list.delete")
 
       conn
       |> put_status(204)

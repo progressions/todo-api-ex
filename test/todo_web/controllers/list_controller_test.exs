@@ -101,6 +101,7 @@ defmodule TodoWeb.ListControllerTest do
       |> post("/api/lists", payload)
 
     assert %{"name" => "Urgent Things", "id" => _, "src" => _} = json_response(conn, 201)
+    assert_received {:increment, "test.list.create"}
   end
 
   test "POST /api/lists with duplicate name ", %{conn: conn} do
@@ -228,6 +229,7 @@ defmodule TodoWeb.ListControllerTest do
       |> patch("/api/lists/#{list.id}", payload)
 
     assert json_response(conn, 201) == "Shopping List updated"
+    assert_received {:increment, "test.list.update"}
   end
 
   test "PATCH /api/lists/:id returns 404 for someone else's list", %{conn: conn} do
@@ -302,6 +304,7 @@ defmodule TodoWeb.ListControllerTest do
       |> delete("/api/lists/#{list.id}")
 
     assert response(conn, 204) == ""
+    assert_received {:increment, "test.list.delete"}
   end
 
   test "DELETE /api/lists/:id returns 404 for someone else's list", %{conn: conn} do
