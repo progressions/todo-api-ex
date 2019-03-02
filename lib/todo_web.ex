@@ -37,6 +37,7 @@ defmodule TodoWeb do
       import Plug.Conn
       import TodoWeb.Router.Helpers
       import TodoWeb.Gettext
+      require DogStatsd
     end
   end
 
