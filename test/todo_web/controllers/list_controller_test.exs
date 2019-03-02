@@ -7,7 +7,6 @@ defmodule TodoWeb.ListControllerTest do
 
   def with_valid_auth_token_header(conn, user) do
     token = Ecto.UUID.generate()
-    Cache.start_link()
     Cache.setex("token.#{token}", 1, user.id)
 
     conn

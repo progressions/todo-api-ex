@@ -4,7 +4,6 @@ defmodule Todo.ItemControllerTest do
   use TodoWeb.ConnCase
 
   def with_valid_auth_token_header(conn) do
-    Cache.start_link()
     Cache.setex("token.abcdef", 1, true)
 
     conn

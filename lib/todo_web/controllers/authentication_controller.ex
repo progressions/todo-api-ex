@@ -36,7 +36,6 @@ defmodule TodoWeb.AuthenticationController do
 
   defp generate_and_cache_token(user_id) do
     with token <- Ecto.UUID.generate() do
-      Cache.start_link()
       Cache.setex("token.#{token}", 1200, user_id)
 
       token
