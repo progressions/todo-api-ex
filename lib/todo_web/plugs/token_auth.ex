@@ -8,19 +8,19 @@ defmodule TodoWeb.Plugs.TokenAuth do
   end
 
   def call(conn, _opts) do
-    case get_req_header(conn, "authorization") do
-      ["Token token=" <> token] ->
-        if user_id = find_user_id(token) do
-          conn
-          |> put_session(:user_id, user_id)
-        else
-          unauthorized(conn)
-        end
+    get_req_header(conn, "authorization")
+    |> handle_request(conn)
+  end
 
-      _ ->
-        unauthorized(conn)
+  defp handle_request(["Token token=" <> token], conn) do
+    if user_id = find_user_id(token) do
+      conn
+      |> put_session(:user_id, user_id)
+    else
+      unauthorized(conn)
     end
   end
+  defp handle_request(_, conn), do: unauthorized(conn)
 
   defp unauthorized(conn) do
     conn

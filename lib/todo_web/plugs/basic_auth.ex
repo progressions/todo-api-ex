@@ -6,21 +6,22 @@ defmodule TodoWeb.Plugs.BasicAuth do
   end
 
   def call(conn, _opts) do
-    case get_req_header(conn, "authorization") do
-      ["Basic " <> auth] ->
-        with user = %Todo.User{} <- Todo.Repo.get_by(Todo.User, encrypted_username_password: auth) do
-          conn
-          |> put_session(:user_id, user.id)
-          |> assign(:current_user, user)
-        else
-          nil ->
-            unauthorized(conn)
-        end
-
-      _ ->
-        unauthorized(conn)
-    end
+    get_req_header(conn, "authorization")
+    |> handle_request(conn)
   end
+
+  defp handle_request(["Basic " <> auth], conn) do
+    Todo.Repo.get_by(Todo.User, encrypted_username_password: auth)
+    |> assign_current_user(conn)
+  end
+  defp handle_request(_, conn), do: unauthorized(conn)
+
+  defp assign_current_user(user = %Todo.User{}, conn) do
+    conn
+    |> put_session(:user_id, user.id)
+    |> assign(:current_user, user)
+  end
+  defp assign_current_user(nil, conn), do: unauthorized(conn)
 
   defp unauthorized(conn) do
     conn
