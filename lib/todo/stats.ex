@@ -6,7 +6,7 @@ defmodule Todo.Stats do
     api.increment(statsd_client, formatted_stat(stat))
   end
 
-  def client do
+  defp client do
     with {:ok, config} <- config(),
          api <- Keyword.get(config, :api),
          port <- Keyword.get(config, :port),
