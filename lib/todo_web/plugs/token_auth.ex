@@ -8,19 +8,20 @@ defmodule TodoWeb.Plugs.TokenAuth do
   end
 
   def call(conn, _opts) do
-    get_req_header(conn, "authorization")
-    |> handle_request(conn)
-  end
-
-  defp handle_request(["Token token=" <> token], conn) do
-    if user_id = find_user_id(token) do
-      conn
-      |> put_session(:user_id, user_id)
+    with ["Token token=" <> token] <- get_req_header(conn, "authorization"),
+         {:ok, user_id} <- find_user_id(token) do
+      assign_current_user(user_id, conn)
     else
-      unauthorized(conn)
+      _ -> unauthorized(conn)
     end
   end
-  defp handle_request(_, conn), do: unauthorized(conn)
+
+  defp assign_current_user(user_id, conn) when not is_nil(user_id) do
+    conn
+    |> put_session(:user_id, user_id)
+  end
+
+  defp assign_current_user(_, conn), do: unauthorized(conn)
 
   defp unauthorized(conn) do
     conn
@@ -29,13 +30,14 @@ defmodule TodoWeb.Plugs.TokenAuth do
   end
 
   defp find_user_id(token) do
-    token = String.replace(token, ~r/"/, "")
     Cache.start_link()
+
+    token = String.replace(token, ~r/"/, "")
     user_id = Cache.get("token.#{token}")
 
     case user_id do
-      {:not_found} -> false
-      _ -> user_id
+      {:not_found} -> nil
+      _ -> {:ok, user_id}
     end
   end
 end
