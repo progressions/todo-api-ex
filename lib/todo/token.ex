@@ -16,7 +16,7 @@ defmodule Todo.Token do
   def get_token(token) do
     Cache.start_link()
 
-    token = String.replace(token, ~r/"/, "") |> format_token()
+    token = token |> format_token()
 
     case user_id = Cache.get(token) do
       nil -> {:not_found}
@@ -38,6 +38,7 @@ defmodule Todo.Token do
   end
 
   defp format_token(token) when not is_nil(token) do
+    token = String.replace(token, ~r/"/, "")
     "token.#{token}"
   end
 
