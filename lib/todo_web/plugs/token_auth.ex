@@ -1,8 +1,6 @@
 defmodule TodoWeb.Plugs.TokenAuth do
   import Plug.Conn
 
-  alias Todo.Cache
-
   def init(opts) do
     opts
   end
@@ -28,11 +26,9 @@ defmodule TodoWeb.Plugs.TokenAuth do
   end
 
   defp find_user_id(token) do
-    Cache.start_link()
-
     token = String.replace(token, ~r/"/, "")
 
-    case user_id = Cache.get("token.#{token}") do
+    case user_id = Todo.TokenGenerator.get_token(token) do
       nil -> {:not_found}
       _ -> {:ok, user_id}
     end

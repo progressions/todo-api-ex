@@ -1,8 +1,4 @@
 defmodule TodoWeb.AuthenticationController do
-  import Plug.Conn
-
-  alias Todo.Cache
-
   use TodoWeb, :controller
   use Timex
   use PhoenixSwagger
@@ -16,7 +12,7 @@ defmodule TodoWeb.AuthenticationController do
 
   def authenticate(conn, _params) do
     with user <- Todo.UserSession.current_user(conn),
-         {:ok, token} <- generate_and_cache_token(user.id) do
+         {:ok, token} <- Todo.TokenGenerator.generate_and_cache_token(user.id) do
       render(conn, "authenticate.json", %{
         token: token,
         expires_at: expires_at()
@@ -30,24 +26,6 @@ defmodule TodoWeb.AuthenticationController do
     |> case do
       {:ok, date} -> DateTime.to_string(date)
       _ -> nil
-    end
-  end
-
-  defp generate_and_cache_token(user_id) do
-    {:ok, token_generator} = fetch_token_generator()
-    token = token_generator.()
-
-    Cache.start_link()
-    Cache.setex("token.#{token}", 1200, user_id)
-
-    {:ok, token}
-  end
-
-  defp fetch_token_generator do
-    with nil <- Application.get_env(:todo, :token_generator) do
-      {:error, "Configure a token_generator in config/config.exs"}
-    else
-      fun -> {:ok, fun}
     end
   end
 

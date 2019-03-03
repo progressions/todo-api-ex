@@ -10,7 +10,7 @@ defmodule TodoWeb.Plugs.BasicAuth do
   def call(conn, _opts) do
     with ["Basic " <> auth] <- get_req_header(conn, "authorization"),
          {:ok, user} <- find_user(auth) do
-       assign_current_user(user, conn)
+      assign_current_user(user, conn)
     else
       _ -> unauthorized(conn)
     end
