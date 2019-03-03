@@ -5,6 +5,8 @@ defmodule TodoWeb.AuthenticationController do
   def authenticate(conn, _params) do
     with user <- Todo.UserSession.current_user(conn),
          {:ok, token} <- Todo.Token.generate_and_cache_token(user.id) do
+      Todo.Stats.increment("user.authenticate")
+
       render(conn, "authenticate.json", %{
         token: token,
         expires_at: expires_at()

@@ -60,6 +60,16 @@ config :todo, :phoenix_swagger,
 # Configures the type of token generated when a user authenticates.
 config :todo, :token_generator, &Ecto.UUID.generate/0
 
+# Set mix_env so it's available even in a compiled release where Mix
+# is not.
+config :todo, :mix_env, Mix.env()
+
+# Configure DogStatsd.
+config :todo, :dogstatsd,
+  api: DogStatsd,
+  host: System.get_env("DOGSTATSD_HOST"),
+  port: System.get_env("DOGSTATSD_PORT")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

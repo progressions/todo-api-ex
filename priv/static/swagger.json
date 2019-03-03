@@ -39,7 +39,6 @@
     "version": "1.0",
     "title": "Todoable"
   },
-  "host": "localhost:4000",
   "definitions": {
     "Token": {
       "type": "object",
