@@ -1,17 +1,18 @@
 defmodule Todo.Stats do
   require DogStatsd
 
-  @dogstatsd_api Application.get_env(:todo, :dogstatsd)[:api]
-
   def increment(stat) do
-    client()
-    |> @dogstatsd_api.increment(formatted_stat(stat))
+    {api, statsd} = client()
+    api.increment(statsd, formatted_stat(stat))
   end
 
-  defp client do
-    with {:ok, [host: host, port: port]} <- config(),
-         {:ok, statsd} <- @dogstatsd_api.new(host, port) do
-      statsd
+  def client do
+    with {:ok, config} <- config(),
+         api <- config[:api],
+         port <- config[:port],
+         host <- config[:host],
+         {:ok, statsd} <- api.new(host, port) do
+           {api, statsd}
     end
   end
 

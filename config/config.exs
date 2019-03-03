@@ -61,7 +61,7 @@ config :todo, :mix_env, Mix.env()
 
 config :todo, :dogstatsd,
   api: DogStatsd,
-  host: "localhost",
+  host: "0.0.0.0",
   port: 8125
 
 # Import environment specific config. This must remain at the bottom
