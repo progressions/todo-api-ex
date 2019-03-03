@@ -1,19 +1,5 @@
 defmodule Todo.ItemControllerTest do
-  alias Todo.Cache
-
   use TodoWeb.ConnCase
-
-  def with_valid_auth_token_header(conn) do
-    Cache.setex("token.abcdef", 1, true)
-
-    conn
-    |> put_req_header("authorization", "Token token=\"abcdef\"")
-  end
-
-  def with_invalid_auth_token_header(conn) do
-    conn
-    |> put_req_header("authorization", "Token token=\"zyxwvut\"")
-  end
 
   test "POST /lists/:list_id/items without authentication throws 401", %{conn: conn} do
     {:ok, %{id: uuid, name: "Grocery List"}} = Todo.Repo.insert(%Todo.List{name: "Grocery List"})
