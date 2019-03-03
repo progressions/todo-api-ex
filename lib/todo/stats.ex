@@ -2,8 +2,8 @@ defmodule Todo.Stats do
   require DogStatsd
 
   def increment(stat) do
-    {api, statsd_client} = client()
-    api.increment(statsd_client, formatted_stat(stat))
+    {api, pid} = client()
+    api.increment(pid, formatted_stat(stat))
   end
 
   defp client do
@@ -11,8 +11,8 @@ defmodule Todo.Stats do
          api <- Keyword.get(config, :api),
          port <- Keyword.get(config, :port),
          host <- Keyword.get(config, :host),
-         {:ok, statsd_client} <- api.new(host, port) do
-           {api, statsd_client}
+         {:ok, pid} <- api.new(host, port) do
+           {api, pid}
     end
   end
 
