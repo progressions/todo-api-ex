@@ -2,17 +2,17 @@ defmodule Todo.Stats do
   require DogStatsd
 
   def increment(stat) do
-    {api, statsd} = client()
-    api.increment(statsd, formatted_stat(stat))
+    {api, statsd_client} = client()
+    api.increment(statsd_client, formatted_stat(stat))
   end
 
   def client do
     with {:ok, config} <- config(),
-         api <- config[:api],
-         port <- config[:port],
-         host <- config[:host],
-         {:ok, statsd} <- api.new(host, port) do
-           {api, statsd}
+         api <- Keyword.get(config, :api),
+         port <- Keyword.get(config, :port),
+         host <- Keyword.get(config, :host),
+         {:ok, statsd_client} <- api.new(host, port) do
+           {api, statsd_client}
     end
   end
 
