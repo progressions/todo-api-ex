@@ -7,7 +7,7 @@ defmodule TodoWeb.Plugs.TokenAuth do
 
   def call(conn, _opts) do
     with ["Token token=" <> token] <- get_req_header(conn, "authorization"),
-         {:ok, user_id} <- find_user_id(token) do
+         {:ok, user_id} <- Todo.TokenGenerator.get_token(token) do
       assign_current_user(user_id, conn)
     else
       _ -> unauthorized(conn)
@@ -23,14 +23,5 @@ defmodule TodoWeb.Plugs.TokenAuth do
     conn
     |> send_resp(401, "unauthorized")
     |> halt
-  end
-
-  defp find_user_id(token) do
-    token = String.replace(token, ~r/"/, "")
-
-    case user_id = Todo.TokenGenerator.get_token(token) do
-      nil -> {:not_found}
-      _ -> {:ok, user_id}
-    end
   end
 end
