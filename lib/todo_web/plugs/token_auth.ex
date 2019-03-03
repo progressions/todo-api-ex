@@ -16,12 +16,10 @@ defmodule TodoWeb.Plugs.TokenAuth do
     end
   end
 
-  defp assign_current_user(user_id, conn) when not is_nil(user_id) do
+  defp assign_current_user(user_id, conn) do
     conn
     |> put_session(:user_id, user_id)
   end
-
-  defp assign_current_user(_, conn), do: unauthorized(conn)
 
   defp unauthorized(conn) do
     conn
@@ -33,10 +31,9 @@ defmodule TodoWeb.Plugs.TokenAuth do
     Cache.start_link()
 
     token = String.replace(token, ~r/"/, "")
-    user_id = Cache.get("token.#{token}")
 
-    case user_id do
-      {:not_found} -> nil
+    case user_id = Cache.get("token.#{token}") do
+      nil -> {:not_found}
       _ -> {:ok, user_id}
     end
   end
