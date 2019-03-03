@@ -1,4 +1,4 @@
-defmodule Todo.TokenGenerator do
+defmodule Todo.Token do
   alias Todo.Cache
 
   @timeout 1200

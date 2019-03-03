@@ -7,7 +7,7 @@ defmodule TodoWeb.Plugs.TokenAuth do
 
   def call(conn, _opts) do
     with ["Token token=" <> token] <- get_req_header(conn, "authorization"),
-         {:ok, user_id} <- Todo.TokenGenerator.get_token(token) do
+         {:ok, user_id} <- Todo.Token.get_token(token) do
       assign_current_user(user_id, conn)
     else
       _ -> unauthorized(conn)
