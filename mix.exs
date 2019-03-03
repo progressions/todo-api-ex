@@ -20,7 +20,7 @@ defmodule Todo.Mixfile do
   def application do
     [
       mod: {Todo.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :dogstatsd]
     ]
   end
 
@@ -47,7 +47,8 @@ defmodule Todo.Mixfile do
       {:timex, "~> 3.1"},
       {:distillery, "~> 2.0"},
       {:plug_logger_json, "~> 0.6.0"},
-      {:ex_json_schema, "~> 0.5"}
+      {:ex_json_schema, "~> 0.5"},
+      {:dogstatsd, "0.0.3"}
     ]
   end
 

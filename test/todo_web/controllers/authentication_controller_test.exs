@@ -37,5 +37,6 @@ defmodule Todo.AuthenticationControllerTest do
       |> post("/api/authenticate")
 
     assert %{"expires_at" => _, "token" => _} = json_response(conn, 200)
+    assert_received {:increment, "test.user.authenticate"}
   end
 end

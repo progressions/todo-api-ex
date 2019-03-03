@@ -30,7 +30,6 @@ defmodule TokenAuth do
 
   defp find_token(token) do
     token = String.replace(token, ~r/"/, "")
-    Cache.start_link()
     user_id = Cache.get("token.#{token}")
 
     case user_id do

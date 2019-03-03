@@ -57,6 +57,13 @@ config :todo, :phoenix_swagger,
     ]
   }
 
+config :todo, :mix_env, Mix.env()
+
+config :todo, :dogstatsd,
+  api: DogStatsd,
+  host: System.get_env("DOGSTATSD_HOST"),
+  port: System.get_env("DOGSTATSD_PORT")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

@@ -16,6 +16,8 @@ defmodule TodoWeb.AuthenticationController do
 
   def authenticate(conn, _params) do
     with user <- Todo.UserSession.current_user(conn) do
+      Todo.Stats.increment("user.authenticate")
+
       render(conn, "authenticate.json", %{
         token: generate_and_cache_token(user.id),
         expires_at: expires_at()
@@ -34,7 +36,6 @@ defmodule TodoWeb.AuthenticationController do
 
   defp generate_and_cache_token(user_id) do
     with token <- Ecto.UUID.generate() do
-      Cache.start_link()
       Cache.setex("token.#{token}", 1200, user_id)
 
       token
