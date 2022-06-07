@@ -1,23 +1,6 @@
 {
   "swagger": "2.0",
   "paths": {
-    "/api/authenticate": {
-      "post": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "",
-        "security": "basicAuth",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "parameters": [],
-        "operationId": "TodoWeb.AuthenticationController.authenticate",
-        "description": "Authenticate with basic auth and get a token back"
-      }
-    },
     "/__healthcheck__": {
       "get": {
         "tags": [
@@ -39,21 +22,6 @@
     "version": "1.0",
     "title": "Todoable"
   },
-  "definitions": {
-    "Token": {
-      "type": "object",
-      "title": "Authentication Token",
-      "properties": {
-        "token": {
-          "type": "string",
-          "description": "Authentication Token"
-        },
-        "expires_at": {
-          "type": "datetime",
-          "description": "Expiration date"
-        }
-      },
-      "description": "Authentication token, expires in 20 minutes"
-    }
-  }
+  "host": "localhost:4000",
+  "definitions": {}
 }
