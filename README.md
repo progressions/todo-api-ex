@@ -17,10 +17,13 @@ Install dependencies:
 mix deps.get
 ```
 
-Set an environment variable to your Postgres username:
+Set environment variables to your Postgres configuration:
 
 ```bash
-export DATABASE_USERNAME=<your-username>
+PGUSER=username
+PGPASSWORD=password
+PGHOST=localhost
+PGDATABASE=todo_api_dev
 ```
 
 Create and migrate databases for development and test environments:
