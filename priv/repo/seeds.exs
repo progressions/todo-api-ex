@@ -10,5 +10,5 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-%Todo.User{username: "username", password: "password"}
+Todo.User.changeset(%Todo.User{}, %{password: "password", username: "username"})
 |> Todo.Repo.insert(on_conflict: :nothing)
