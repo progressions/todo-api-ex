@@ -17,9 +17,5 @@ defmodule TodoWeb.AuthenticationController do
   defp expires_at do
     Timex.now()
     |> Timex.add(Duration.from_minutes(20))
-    |> case do
-      {:ok, date} -> DateTime.to_string(date)
-      _ -> nil
-    end
   end
 end
